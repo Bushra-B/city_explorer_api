@@ -20,3 +20,23 @@ The app requests data from APIs and modified and send it to the client to displa
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+
+
+-------------------
+
+## Features - Time Estimate:
+
+___
+
+Number and name of feature: Feature #1: Locations
+
+Estimate of time needed to complete: 40 minutes
+
+Start time: 4:02 PM
+
+Finish time: _____
+
+Actual time needed to complete: _____
+
+___
+
