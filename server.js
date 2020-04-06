@@ -71,3 +71,9 @@ server.use('*', (request, response) => {
   response.status(404).send('ERROR 404: PAGE NOT FOUND');
 });
 
+//handle errors
+server.use((error, request, response) => {
+  response.status(500).send('Error 500: Sorry, something went wrong');
+});
+
+

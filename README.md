@@ -53,3 +53,17 @@ Finish time: 6:15 PM
 Actual time needed to complete: 1 hour and 19 minutes
 
 ___
+
+___
+
+Number and name of feature: Feature #3: Handle Errors
+
+Estimate of time needed to complete: 10 minutes
+
+Start time: 7:38 AM
+
+Finish time: 7:44 AM
+
+Actual time needed to complete: 6 minutes
+
+___
