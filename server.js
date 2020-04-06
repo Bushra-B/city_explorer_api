@@ -30,18 +30,40 @@ server.get('/', (request, response) => {
 
 server.get('/location', (request, response) => {
   const geoData = require('./data/geo.json');
-  const city = request.query.city;
-  const cityLocation = new LocationData(city, geoData);
+  const cityLocation = new LocationData(geoData);
   response.send(cityLocation);
 });
 
 //C.F to get location data as instances
 
-function LocationData(city, geoData) {
-  this.search_query = city;
+function LocationData(geoData) {
   this.formatted_query = geoData[0].display_name;
   this.latitude = geoData[0].lat;
   this.longitude = geoData[0].lon;
+}
+
+// handling weather route
+
+server.get('/weather', (request, response) => {
+  const weatherData = require('./data/weather.json');
+  const data = weatherData.data;
+  data.forEach((element, index) => {
+    let weather = new Weather(data, index);
+    // weatherArr.push(weather);
+  });
+
+  //send response
+  response.send(weatherArr);
+});
+
+let weatherArr =[];
+
+// C.F to get weather data
+
+function Weather(data, index) {
+  this.description = data[index].weather.description;
+  this.time = data[index].datetime;
+  weatherArr.push(this);
 }
 
 //handle not found
