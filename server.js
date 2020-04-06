@@ -1,12 +1,15 @@
 'use strict';
 
-// initial server setup
-
+// Server Dependencies
 const express = require('express');
 
 const cors = require('cors');
 
+// Load Enviroumnet Variables from the .env file
+
 require('dotenv').config();
+
+// Initial Server Setup
 
 const PORT = process.env.PORT || 3000;
 
@@ -18,15 +21,13 @@ server.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
 });
 
-
-//handle any route
+// Handle any Route
 
 server.get('/', (request, response) => {
   response.status(200).send('Working');
 });
 
-
-//handling location route
+// Handling Location Route
 
 server.get('/location', (request, response) => {
   const geoData = require('./data/geo.json');
@@ -34,7 +35,7 @@ server.get('/location', (request, response) => {
   response.send(cityLocation);
 });
 
-//C.F to get location data as instances
+// C.F to get location data as instances
 
 function LocationData(geoData) {
   this.formatted_query = geoData[0].display_name;
@@ -42,36 +43,32 @@ function LocationData(geoData) {
   this.longitude = geoData[0].lon;
 }
 
-// handling weather route
+// Handling Weather Route
 
 server.get('/weather', (request, response) => {
   const weatherData = require('./data/weather.json');
   const data = weatherData.data;
-  data.forEach((element, index) => {
-    let weather = new Weather(data, index);
-    // weatherArr.push(weather);
+  let weatherArr = data.map((element, index) => {
+    return new Weather(data, index);
   });
-
   //send response
   response.send(weatherArr);
 });
 
-let weatherArr =[];
-
 // C.F to get weather data
 
 function Weather(data, index) {
-  this.description = data[index].weather.description;
+  this.forecast = data[index].weather.description;
   this.time = data[index].datetime;
-  weatherArr.push(this);
+  // weatherArr.push(this);
 }
 
-//handle not found
+// Handle 'Not Found'
 server.use('*', (request, response) => {
   response.status(404).send('ERROR 404: PAGE NOT FOUND');
 });
 
-//handle errors
+// Handle 'Errors'
 server.use((error, request, response) => {
   response.status(500).send('Error 500: Sorry, something went wrong');
 });

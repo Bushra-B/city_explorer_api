@@ -67,3 +67,17 @@ Finish time: 7:44 AM
 Actual time needed to complete: 6 minutes
 
 ___
+
+___
+
+Number and name of feature: Feature #4: Data Formatting
+
+Estimate of time needed to complete: 20 minutes
+
+Start time: 3:47 PM
+
+Finish time: 4:07 AM
+
+Actual time needed to complete: 20 minutes
+
+___
