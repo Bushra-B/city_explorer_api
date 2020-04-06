@@ -24,7 +24,7 @@ The app requests data from APIs and modified and send it to the client to displa
 
 -------------------
 
-## Features - Time Estimate:
+## Lab06 Features - Time Estimate:
 
 ___
 
@@ -68,9 +68,12 @@ Actual time needed to complete: 6 minutes
 
 ___
 
+
+## Lab07 Features - Time Estimate:
+
 ___
 
-Number and name of feature: Feature #4: Data Formatting
+Number and name of feature: Feature #1: Data Formatting
 
 Estimate of time needed to complete: 20 minutes
 
@@ -81,3 +84,18 @@ Finish time: 4:07 AM
 Actual time needed to complete: 20 minutes
 
 ___
+
+___
+
+Number and name of feature: Feature #2: Locations
+
+Estimate of time needed to complete: 35 minutes
+
+Start time: 4:21 PM
+
+Finish time: 5:14 AM
+
+Actual time needed to complete: 53 minutes
+
+___
+
