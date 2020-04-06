@@ -2,9 +2,8 @@
 
 // Server Dependencies
 const express = require('express');
-
 const cors = require('cors');
-
+const superagent = require('superagent');
 // Load Enviroumnet Variables from the .env file
 
 require('dotenv').config();
@@ -27,17 +26,30 @@ server.get('/', (request, response) => {
   response.status(200).send('Working');
 });
 
+// Route Definitions
+server.get('/location', locationHandler);
+
 // Handling Location Route
 
-server.get('/location', (request, response) => {
-  const geoData = require('./data/geo.json');
-  const cityLocation = new LocationData(geoData);
-  response.send(cityLocation);
-});
+function locationHandler(request, response) {
+  const city = request.query.city;
+  getLocation(city).then(cityLocation => response.status(200).json(cityLocation));
+}
+
+function getLocation(city) {
+  const LOCATION_KEY = process.env.GEOCODE_API_KEY;
+  const url = `https://eu1.locationiq.com/v1/search.php?key=${LOCATION_KEY}&q=${city}&format=json`;
+  return superagent.get(url).then(geoData => {
+    const cityLocation = new LocationData(city, geoData.body);
+    return cityLocation;
+  });
+
+}
 
 // C.F to get location data as instances
 
-function LocationData(geoData) {
+function LocationData(city, geoData) {
+  this.search_query = city;
   this.formatted_query = geoData[0].display_name;
   this.latitude = geoData[0].lat;
   this.longitude = geoData[0].lon;
