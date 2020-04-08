@@ -5,7 +5,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
-// const pg = require('pg');
+const pg = require('pg');
+
 // Load Enviroumnet Variables from the .env file
 
 
@@ -18,9 +19,7 @@ const server = express();
 
 server.use(cors());
 
-server.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
-});
+const client = new pg.Client(process.env.DATABASE_URL);
 
 // Handle any Route
 
@@ -37,7 +36,18 @@ server.get('/weather', weatherHandler);
 
 function locationHandler(request, response) {
   const city = request.query.city;
-  getLocation(city).then(cityLocation => response.status(200).json(cityLocation));
+  let SQL = 'SELECT * FROM locations';
+  if (SQL) {
+    client.query(SQL)
+      .then(results => {
+        response.status(200).json(results.rows);
+      })
+      .catch (error => errorHandler(error));
+  } else {
+    getLocation(city).then(cityLocation => {
+      response.status(200).json(cityLocation);
+    });
+  }
 }
 
 function getLocation(city) {
@@ -45,6 +55,7 @@ function getLocation(city) {
   const url = `https://eu1.locationiq.com/v1/search.php?key=${LOCATION_KEY}&q=${city}&format=json`;
   return superagent.get(url).then(geoData => {
     const cityLocation = new LocationData(city, geoData.body);
+
     return cityLocation;
   });
 
@@ -74,7 +85,7 @@ function LocationData(city, geoData) {
 //****************************************************/
 
 function weatherHandler(request, response) {
-  const city = request.query.search_query;
+  const city = request.query.city;
   console.log(city);
   getWeather(city).then(weatherData => response.status(200).json(weatherData));
   weatherArr =[];
@@ -87,7 +98,7 @@ function getWeather(city) {
   const url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${WEATHER_KEY}`;
   return superagent.get(url)
     .then(weatherData => {
-      console.log(weatherData);
+      // console.log(weatherData);
       weatherData.body.data.forEach(element => {
         var weatherData = new Weather(element);
         weatherArr.push(weatherData);
@@ -130,8 +141,12 @@ server.use('*', (request, response) => {
 });
 
 // Handle 'Errors'
-server.use((error, request, response) => {
-  response.status(500).send('Error 500: Sorry, something went wrong');
+function errorHandler(error, request, response) {
+  response.status(500).send('Error 500: Sorry, something went wrong ', error);
+}
+//connecting database with server
+client.connect().then(() => {
+  server.listen(PORT, () => {
+    console.log(`Listening on port: ${PORT}`);
+  });
 });
-
-
