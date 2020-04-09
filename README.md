@@ -128,3 +128,32 @@ Actual time needed to complete: 53 minutes
 ___
 
 
+## Lab08 Features - Time Estimate:
+
+___
+
+Number and name of feature: Feature #1: Database
+
+Estimate of time needed to complete: 30 minutes
+
+Start time: 6:29 PM
+
+Finish time: 7:02 AM
+
+Actual time needed to complete: 33 minutes
+
+___
+
+___
+
+Number and name of feature: Feature #2: Server
+
+Estimate of time needed to complete: 30 minutes
+
+Start time: 7:06 PM
+
+Finish time: 7:02 AM
+
+Actual time needed to complete: 33 minutes
+
+___
