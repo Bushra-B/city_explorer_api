@@ -128,3 +128,19 @@ Actual time needed to complete: 53 minutes
 ___
 
 
+## Lab09 Features - Time Estimate:
+
+___
+
+Number and name of feature: Feature #1: Movies
+
+Estimate of time needed to complete: 20 minutes
+
+Start time: 6:47 AM
+
+Finish time: 5:14 AM
+
+Actual time needed to complete: 53 minutes
+
+___
+

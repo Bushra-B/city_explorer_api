@@ -1,14 +1,13 @@
 'use strict';
-require('dotenv').config();
 
 // Server Dependencies
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
 // const pg = require('pg');
+
 // Load Enviroumnet Variables from the .env file
-
-
+require('dotenv').config();
 
 // Initial Server Setup
 
@@ -29,35 +28,37 @@ server.get('/', (request, response) => {
 });
 
 // Route Definitions
-server.get('/location', locationHandler);
+// server.get('/location', locationHandler);
 server.get('/weather', weatherHandler);
 // server.get('/trails', trailsHandler);
+server.get('/movies', movieHandler);
+server.get('/yelp', yelpHandler);
 
-// Handling Location Route
+// // Handling Location Route
 
-function locationHandler(request, response) {
-  const city = request.query.city;
-  getLocation(city).then(cityLocation => response.status(200).json(cityLocation));
-}
+// function locationHandler(request, response) {
+//   const city = request.query.city;
+//   getLocation(city).then(cityLocation => response.status(200).json(cityLocation));
+// }
 
-function getLocation(city) {
-  const LOCATION_KEY = process.env.GEOCODE_API_KEY;
-  const url = `https://eu1.locationiq.com/v1/search.php?key=${LOCATION_KEY}&q=${city}&format=json`;
-  return superagent.get(url).then(geoData => {
-    const cityLocation = new LocationData(city, geoData.body);
-    return cityLocation;
-  });
+// function getLocation(city) {
+//   const LOCATION_KEY = process.env.GEOCODE_API_KEY;
+//   const url = `https://eu1.locationiq.com/v1/search.php?key=${LOCATION_KEY}&q=${city}&format=json`;
+//   return superagent.get(url).then(geoData => {
+//     const cityLocation = new LocationData(city, geoData.body);
+//     return cityLocation;
+//   });
 
-}
+// }
 
-// C.F to get location data as instances
+// // C.F to get location data as instances
 
-function LocationData(city, geoData) {
-  this.city = city;
-  this.formatted_query = geoData[0].display_name;
-  this.latitude = geoData[0].lat;
-  this.longitude = geoData[0].lon;
-}
+// function LocationData(city, geoData) {
+//   this.city = city;
+//   this.formatted_query = geoData[0].display_name;
+//   this.latitude = geoData[0].lat;
+//   this.longitude = geoData[0].lon;
+// }
 
 // Handling Weather Route
 
@@ -75,7 +76,6 @@ function LocationData(city, geoData) {
 
 function weatherHandler(request, response) {
   const city = request.query.search_query;
-  console.log(city);
   getWeather(city).then(weatherData => response.status(200).json(weatherData));
   weatherArr =[];
 }
@@ -103,6 +103,32 @@ function Weather(dailyWeather) {
   this.time = dailyWeather.valid_date;
 }
 
+// Handling Movies Route
+
+function movieHandler(request, response) {
+  const city = request.query.city;
+  getMovie(city).then(movieData => response.status(200).json(movieData));
+}
+
+function getMovie(city) {
+  const MOVIE_KEY = process.env.MOVIE_API_KEY;
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_KEY}&query=${city}`;
+}
+
+// Handling Yelp Route
+
+function yelpHandler(request, response) {
+  const city = request.query.city;
+  getYelp(city).then(yelpData => response.status(200).json(yelpData));
+}
+
+function getYelp(city) {
+  const YELP_KEY = process.env.YELP_API_KEY;
+  const url = `https://api.yelp.com/v3/businesses/search?location=${city}`;
+  superagent.get(url)
+        .set('Authorization', `Bearer ${key}`)
+          
+        
 // Handling Trail Route
 
 // function trailsHandler(request, response) {
