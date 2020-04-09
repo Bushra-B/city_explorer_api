@@ -1,12 +1,14 @@
 'use strict';
+require('dotenv').config();
 
 // Server Dependencies
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
+// const pg = require('pg');
 // Load Enviroumnet Variables from the .env file
 
-require('dotenv').config();
+
 
 // Initial Server Setup
 
@@ -28,6 +30,8 @@ server.get('/', (request, response) => {
 
 // Route Definitions
 server.get('/location', locationHandler);
+server.get('/weather', weatherHandler);
+// server.get('/trails', trailsHandler);
 
 // Handling Location Route
 
@@ -49,7 +53,7 @@ function getLocation(city) {
 // C.F to get location data as instances
 
 function LocationData(city, geoData) {
-  this.search_query = city;
+  this.city = city;
   this.formatted_query = geoData[0].display_name;
   this.latitude = geoData[0].lat;
   this.longitude = geoData[0].lon;
@@ -57,23 +61,68 @@ function LocationData(city, geoData) {
 
 // Handling Weather Route
 
-server.get('/weather', (request, response) => {
-  const weatherData = require('./data/weather.json');
-  const data = weatherData.data;
-  let weatherArr = data.map((element, index) => {
-    return new Weather(data, index);
-  });
-  //send response
-  response.send(weatherArr);
-});
+//*********Lab07-Feature#1: Data Formatting************/
+// server.get('/weather', (request, response) => {
+//   const weatherData = require('./data/weather.json');
+//   const data = weatherData.data;
+//   let weatherArr = data.map((element, index) => {
+//     return new Weather(data, index);
+//   });
+//   //send response
+//   response.send(weatherArr);
+// });
+//****************************************************/
+
+function weatherHandler(request, response) {
+  const city = request.query.search_query;
+  console.log(city);
+  getWeather(city).then(weatherData => response.status(200).json(weatherData));
+  weatherArr =[];
+}
+
+let weatherArr =[];
+
+function getWeather(city) {
+  const WEATHER_KEY = process.env.WEATHER_API_KEY;
+  const url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${WEATHER_KEY}`;
+  return superagent.get(url)
+    .then(weatherData => {
+      console.log(weatherData);
+      weatherData.body.data.forEach(element => {
+        var weatherData = new Weather(element);
+        weatherArr.push(weatherData);
+      });
+      return weatherArr;
+    });
+}
 
 // C.F to get weather data
 
-function Weather(data, index) {
-  this.forecast = data[index].weather.description;
-  this.time = data[index].datetime;
-  // weatherArr.push(this);
+function Weather(dailyWeather) {
+  this.forecast = dailyWeather.weather.description;
+  this.time = dailyWeather.valid_date;
 }
+
+// Handling Trail Route
+
+// function trailsHandler(request, response) {
+//   let lat = locationsArr.lat;
+//   let lon = locationsArr.lon;
+//   getTrails(lat, lon).then(trailsData => response.status(200).json(trailsData));
+// }
+
+// function getTrails(lat, lon) {
+//   const TRAILS_KEY = process.env.TRAIL_API_KEY;
+//   const url = `https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&key=${TRAILS_KEY}`;
+//   return superagent.get(url).then(trailsData => {
+//     const trailsInfo = new Trails(lat, lon, trailsData.body);
+//     return trailsInfo;
+//   });
+// }
+
+// // C.F
+
+// function Trail(lat, lon, )
 
 // Handle 'Not Found'
 server.use('*', (request, response) => {
